@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>This is the page to register</title>
+        <style>
+            body{
+                background-color: aliceblue;
+            }
+             
+            .container { 
+                 text-align: center;
+                 justify-content: center;
+                 padding: 16px; 
+            } 
+        </style>
+    </head>
+    <body>
+        <form method="GET" action="/main2/home">
+                        <div class="container"> 
+                    <label><b>Name</b></label><br/>
+                    <input type="text" placeholder="Enter Username" name="uname" required> <br/><br/><br/>
+          
+                    <label><b>E-mail</b></label><br/>
+                    <input type="email" placeholder="Enter E-mail" name="email" required> <br/><br/><br/>
+          
+                    <label><b>Password</b></label> <br/>
+                    <input type="password" placeholder="Enter Password" name="password" required> <br/><br/><br/>
+          
+                    <label><b>Confirm Password</b></label> <br/>
+                    <input type="password" placeholder="Re-Enter Password" name="password" required> <br/><br/><br/>
+          
+
+                    <button type="submit">Register</button> <br/><br/>
+                    <a href="/main2/home">Login Here.</a>
+                </div> 
+            </form>
+
+    </body>
+
+</html>

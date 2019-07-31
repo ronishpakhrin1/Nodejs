@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+
+       form {
+        padding: 50px; 
+        position: fixed; 
+        bottom: 0;
+        width: 100%;
+       }
+       form input { 
+         border: 10; 
+        padding: 5px; 
+        width: 50%; 
+        margin-right: .5%;
+       }
+       form button { 
+        width: 10%; 
+        background: rgb(130, 224, 255); 
+        border-radius: 25px; 
+        padding: 10px; 
+      }
+      #messages { 
+        list-style-type: circle; 
+        margin-left: .9%;
+        padding: 0;
+       }
+       #messages li { 
+         padding: 5px 10px; 
+        }
+        #messages li:nth-child(odd) { background: #eee; }
+        #messages { margin-bottom: 40px }
+        body { font: 15px Helvetica, Arial; }
+    </style>
+  </head>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function () {
+        var socket = io.connect('http://localhost:5050');
+        $('form').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+    <ul id="messages"></ul>
+    <form action="">
+      <input type="text" id="m" autocomplete="off" />
+      <button class="btn">Send</button>
+    </form>
+  </body>
+</html>

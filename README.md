@@ -6,3 +6,4 @@ fileupload.js--makes use of formidable module.<br/>
 yargs.js--makes use of yargs module.<br/><br/><br/>
 
 broadcast_chat2 : deals with username and broadcasting to every other clients in the server except the client initiating the event <br/>
+List the number of clients online and their ID's. <br/>

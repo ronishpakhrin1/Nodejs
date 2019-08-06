@@ -32,8 +32,13 @@ io.on('connection', function (socket) {
     socket.on('chat', function (data) {
         var msg = data.message.trim();
         console.log(msg);
+<<<<<<< HEAD
         //private
         if (msg.substr(0, 1) === '@') {
+=======
+        //private chat
+        if(msg.substr(0,1) ==='@'){
+>>>>>>> b63f50a8f2531f13938d46a6feca8b53de914a90
             var ind = msg.indexOf(' ');
             var uname = msg.substr(1, ind).trim();
             console.log(uname);

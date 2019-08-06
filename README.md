@@ -9,4 +9,5 @@ chat_application : 1-lets client broadcast the message through the server. <br/>
 		   2-Broadcast the message with client except the one initiating the event. <br/>
 		   3-lets you have a private chat<br/>
 	           4-Gives nicknames to the users.<br/>
-		   5-list the total number and names of the online users.<br/> 
+		   5-list the total number and names of the online users.<br/>
+		   6-lets you create,join,leave rooms and chat within the rooms.<br/> 

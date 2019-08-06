@@ -30,6 +30,11 @@ h1{
     overflow: auto;
     background: #f9f9f9;
 }
+.feed{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-style: italic;
+    -webkit-text-fill-color: #555
+}
 .per{
     padding: 14px 0px;
     margin: 0 20px;

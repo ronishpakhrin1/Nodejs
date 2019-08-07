@@ -2,12 +2,15 @@
 <head>
    <link href="/style.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div>
     <div id="main2">
         <h1 id="num"></h1>
-        <ul id="list" style="-webkit-text-fill-color:chartreuse"></br></ul>
+        <div>
+            <ul id="list" style="-webkit-text-fill-color:chartreuse"></ul>
+        </div>
         <div>
             <button id="create_room">Join Room</button>
             <button id="leave_room">Leave Room</button>
@@ -22,6 +25,7 @@
     <h1 id="handle"></h1>
     <input type="text" id="message" placeholder="Message" required="true"/>
     <button id="send">Send</button>
+    <button id="RoomSend" style="display: none">Room</button>
     </div>
 </div>
 </body>

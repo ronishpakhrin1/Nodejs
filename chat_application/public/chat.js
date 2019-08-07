@@ -9,7 +9,12 @@ var output=document.getElementById('output'),
     num=document.getElementById('num'),
     createRoom=document.getElementById('create_room'),
     leaveRoom=document.getElementById('leave_room'),
+    buttonRoom=document.getElementById('RoomSend');
     list=document.getElementById('list');
+
+    //hide the button
+    var $btnSend=$('#send'),
+        $btnRoom=$('#RoomSend');
 
     //promt for username
     var userName = window.prompt('Enter Your Name');
@@ -18,29 +23,49 @@ var output=document.getElementById('output'),
     }
 
     document.getElementById('handle').innerHTML=userName;
+
+    //assign username
     socket.emit('username',userName);
    
 //chat room
-createRoom.addEventListener('click',function(){
+createRoom.addEventListener('click',function(e){
     let roomName = window.prompt('Enter the room name');
     if(roomName===''){
         window.location.reload();
     }
-    socket.emit('create',roomName);
+    socket.emit('create',{room: roomName,handle: userName});
+    e.preventDefault();
+    $btnRoom.css({"display": "initial"});
+    $btnSend.hide();
+    $btnRoom.show();
+  
 });
 
 //leave room
-leaveRoom.addEventListener('click',function(){
+leaveRoom.addEventListener('click',function(e){
     let roomName = window.prompt('Enter the room name');
     if(roomName===''){
         window.location.reload();
     }
     socket.emit('leave',{room:roomName,handle:userName});
+
+    e.preventDefault();
+    $btnRoom.hide();
+    $btnSend.show();
 });
 
 //send the message
 button.addEventListener('click',function(){
     socket.emit('chat',{
+        message: message.value,
+        handle: userName
+    });
+    message.value="";
+});
+
+//send the message to the room
+buttonRoom.addEventListener('click',function(){
+    socket.emit('roomChat',{
         message: message.value,
         handle: userName
     });
@@ -83,7 +108,11 @@ socket.on('feed1',function(data){
 socket.on('event',function(data){
     output.innerHTML+='<span class="per"><b>'+'^^'+data.handle+' :'+data.message +'</b>'+'<br/>'+'</span>';
 });
+socket.on('eventJoin',function(data){
+    output.innerHTML +='<span class="per"><b>'+'^^'+data+'  :Joined the room' +':</b>'+'<br/>'+'</span>';
+
+});
 socket.on('eventLeave',function(data){
-    output.innerHTML +='<span class="per"><b>'+'^^'+data+'  :left the room' +':</b>'+'<br/>'+'</span>';
+    output.innerHTML +='<span class="per"><b>'+'^^'+data+'  :Left the room' +':</b>'+'<br/>'+'</span>';
 
 });

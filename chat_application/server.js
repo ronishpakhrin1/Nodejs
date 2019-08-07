@@ -32,13 +32,8 @@ io.on('connection', function (socket) {
     socket.on('chat', function (data) {
         var msg = data.message.trim();
         console.log(msg);
-<<<<<<< HEAD
         //private
         if (msg.substr(0, 1) === '@') {
-=======
-        //private chat
-        if(msg.substr(0,1) ==='@'){
->>>>>>> b63f50a8f2531f13938d46a6feca8b53de914a90
             var ind = msg.indexOf(' ');
             var uname = msg.substr(1, ind).trim();
             console.log(uname);
@@ -71,14 +66,16 @@ io.on('connection', function (socket) {
     });
     
     //chat room
-    socket.on('create',function(room){
+    socket.on('create',function(data){
+        var room=data.room,
+            name=data.handle;
         socket.join(room);
-        console.log('connected to the room '+room);
+        console.log(name+' connected to the room '+room);
         console.log(socket.adapter.rooms);
-        socket.on('chat',function(data){
+        io.sockets.to(room).emit('eventJoin',name);
+        socket.on('roomChat',function(data){
                 io.sockets.to(room).emit('event',data);
         });
-       // io.sockets.to(room).emit('event',{message: 'lets party',handle:name});
     });
 
     //leave room
@@ -104,6 +101,7 @@ io.on('connection', function (socket) {
         for (let i = 0; i < list.length; i++) {
             if (list[i].id === socket.id) {
                 console.log(list[i].name);
+
                 left=list[i].name;
                 list1.splice(i,1);
                 console.log('deleted');

@@ -41,6 +41,12 @@ h1{
     font-style: italic;
     color: rgb(139, 187, 165);
 }
+.online{
+    -webkit-text-fill-color: greenyellow;
+}
+.offline{
+    -webkit-text-fill-color: red;
+}
 #output p{
     padding: 14px 0px;
     margin: 0 20px;

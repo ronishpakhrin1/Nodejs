@@ -25,7 +25,7 @@ var output=document.getElementById('output'),
     document.getElementById('handle').innerHTML=userName;
 
     //assign username
-    socket.emit('username',userName);
+    socket.emit('username',userName,function(){});
    
 //chat room
 createRoom.addEventListener('click',function(e){
@@ -92,7 +92,18 @@ socket.on('typing',function(data){
     feedback.innerHTML = '<p><em>' + data + ' is typing..' + '</p></em>';
 });
 socket.on('print',function(data){
-    list.innerHTML = data ;
+    var html='';
+    for(var userName in data){
+        var isuserNameOnline = data[userName].online;
+        if(isuserNameOnline){
+            var status='<span class="online"><b>YES</b></span>';
+        }
+        else{
+            var status='<span class="offline"><b>NO</b></span>';
+        }
+        html+=userName+'(online:'+status+')<br/>';
+    }
+    list.innerHTML = html ;
 });
 socket.on('number',function(data){
     num.innerHTML = data.description;

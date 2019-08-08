@@ -96,12 +96,12 @@ socket.on('print',function(data){
     for(var userName in data){
         var isuserNameOnline = data[userName].online;
         if(isuserNameOnline){
-            var status='<span class="online"><b>YES</b></span>';
+            var status='<span class="online"><b>ONLINE</b></span>';
         }
         else{
-            var status='<span class="offline"><b>NO</b></span>';
+            var status='<span class="offline"><b>OFFLINE</b></span>';
         }
-        html+=userName+'(online:'+status+')<br/>';
+        html+=userName+'  '+status+'<br/>';
     }
     list.innerHTML = html ;
 });

@@ -29,25 +29,19 @@ io.on('connection', function (socket) {
     }); */
 
     //online
-    socket.on('username',function(data,callback){
-    
+    socket.on('username',function(data){
+    console.log('got into username');
         list.push({
             id: socket.id,
             name: data
         });
-      
-        if(list1.hasOwnProperty(data)){
-            callback(false);
-        }
-        else{
-           callback(true);
+        console.log('going further');
             socket.username=data;
             list1[socket.username]={online: true};
             io.emit('print', list1);
             console.log('yoyo');
             console.log(list1);
             io.emit('feed',data);
-        }
     });
 
 
@@ -118,7 +112,7 @@ io.on('connection', function (socket) {
     });
 
     //when disconnected
-   /* socket.on('disconnect', function () {
+/* socket.on('disconnect', function () {
         clients--;
         var left;
         io.emit('number', { description: clients + '  online.' });
@@ -135,11 +129,13 @@ io.on('connection', function (socket) {
         io.emit('feed1',left);
     });  */
     socket.on('disconnect', function () {
+        console.log('inside disconnect');
         var left=socket.username;
         clients--;
         io.emit('number', { description: clients + '  online.' });
         if(!socket.username){
             return;
+            console.log('in not username');
         }
         list1[socket.username].online=false;
         io.emit('print', list1);

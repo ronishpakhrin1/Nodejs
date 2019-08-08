@@ -25,7 +25,7 @@ var output=document.getElementById('output'),
     document.getElementById('handle').innerHTML=userName;
 
     //assign username
-    socket.emit('username',userName,function(){});
+    socket.emit('username',userName);
    
 //chat room
 createRoom.addEventListener('click',function(e){

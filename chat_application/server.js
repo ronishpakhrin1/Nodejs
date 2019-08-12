@@ -5,64 +5,87 @@ var http = require('http'),
     app = express(),
     server = http.createServer(app),
     io = socket(server),
-    clients = 0,list = [],list1 = {};
+    mysql = require('mysql');
+    clients = 0,list = [],list1 = {},msgList=[];
 
+    //database
+    var con = mysql.createConnection({
+        host:'localhost',
+        user:'root',
+        password:'password',
+        database:'ron'
+    });
+
+    con.connect(function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Connection Established');
+        }
+    });
+     
 app.use(express.static('public'));
-
 //connection
 io.on('connection', function (socket) {
     clients++;
     console.log('connection made by ' + socket.id);
     io.emit('number', { description: clients + '  online.' });
-
-    //set  username
-    /*socket.on('username', function (data) {
-        list.push({
-            id: socket.id,
-            name: data
-        });
-        let len = list.length;
-        len--;
-        list1.push(list[len].name+'</br>');
-        io.emit('print', list1);
-        io.emit('feed',data);
-    }); */
-
+    //get messages from the database
+    con.query('select * from messages',function(err,result){
+        if(err){
+            console.log(err);
+        }else{
+                Object.keys(result).forEach(function(key){
+                var row=result[key];      
+                socket.emit('chatDb',{message:row.msg,time:row.ts});
+            });
+        }
+    });
+    
     //online
     socket.on('username',function(data){
-    console.log('got into username');
+        //insert into userRon table
+        var record={name: data};
+        con.query('insert into userRon set?',record,function(err,res){
+            if(err){
+                console.log(err);
+            }else{
+                console.log('data inserted',res.insertId);
+            }
+        });
         list.push({
             id: socket.id,
             name: data
         });
-        console.log('going further');
             socket.username=data;
             list1[socket.username]={online: true};
             io.emit('print', list1);
-            console.log('yoyo');
-            console.log(list1);
             io.emit('feed',data);
     });
-
-
 
     //send the message
     socket.on('chat', function (data) {
         var msg = data.message.trim();
-        console.log(msg);
+        //insert into messages table 
+        var text={msg: msg};
+        if (msg.substr(0, 1) !== '@'){
+                con.query('insert into messages set?',text,function(err,res){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log('data onserted',res.insertId);
+                    }
+                });
+        }
         //private
         if (msg.substr(0, 1) === '@') {
             var ind = msg.indexOf(' ');
             var uname = msg.substr(1, ind).trim();
-            console.log(uname);
             var msg = msg.substr(ind, msg.length).trim();
-            console.log(msg);
-            console.log('hello');
             var id, sender, id2;
             for (let i = 0; i < list.length; i++) {
                 if (list[i].name === uname) {
                     id = list[i].id;
-                    console.log(id);
                     break;
                 }
             }
@@ -70,7 +93,6 @@ io.on('connection', function (socket) {
                 if (list[i].name === data.handle) {
                     id2 = list[i].id;
                     sender = list[i].name;
-                    console.log(sender);
                     break;
                 }
             }
@@ -88,8 +110,6 @@ io.on('connection', function (socket) {
         var room=data.room,
             name=data.handle;
         socket.join(room);
-        console.log(name+' connected to the room '+room);
-        console.log(socket.adapter.rooms);
         io.sockets.to(room).emit('eventJoin',name);
         socket.on('roomChat',function(data){
                 io.sockets.to(room).emit('event',data);
@@ -101,8 +121,6 @@ io.on('connection', function (socket) {
         var room=data.room,
             name=data.handle;
         socket.leave(room);
-        console.log(socket.adapter.rooms);
-        console.log(name+' left');
         io.sockets.to(room).emit('eventLeave',name);
     });
 
@@ -112,35 +130,15 @@ io.on('connection', function (socket) {
     });
 
     //when disconnected
-/* socket.on('disconnect', function () {
-        clients--;
-        var left;
-        io.emit('number', { description: clients + '  online.' });
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].id === socket.id) {
-                console.log(list[i].name);
-
-                left=list[i].name;
-                list1.splice(i,1);
-                console.log('deleted');
-            }
-        }
-        io.emit('print', list1);
-        io.emit('feed1',left);
-    });  */
     socket.on('disconnect', function () {
-        console.log('inside disconnect');
         var left=socket.username;
         clients--;
         io.emit('number', { description: clients + '  online.' });
         if(!socket.username){
             return;
-            console.log('in not username');
         }
         list1[socket.username].online=false;
         io.emit('print', list1);
-        console.log('hoho');
-        console.log(list1);
         io.emit('feed1',left);
     });
 });

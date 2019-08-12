@@ -28,7 +28,7 @@ var output=document.getElementById('output'),
     socket.emit('username',userName);
    
 //chat room
-createRoom.addEventListener('click',function(e){
+    createRoom.addEventListener('click',function(e){
     let roomName = window.prompt('Enter the room name');
     if(roomName===''){
         window.location.reload();
@@ -82,10 +82,14 @@ socket.on('chat',function(data){
     feedback.innerHTML='';
     output.innerHTML += '<p><strong>' + data.handle + ':</strong>' + data.message + '</p>';
 });
-
+//recieving from the database
+socket.on('chatDb',function(data){
+        feedback.innerHTML='';
+        output.innerHTML += '<p><strong>'+data.message+' '+'<span class="time">'+data.time+'</span>'+'</strong>' + '</p>'
+});
 socket.on('pchat',function(data){
     feedback.innerHTML='';
-    output.innerHTML += '<span class="per"><b>'+'>>'+data.name +':</b>' + data.message +'<br/>'+ '</span>';
+    output.innerHTML += '<span class="per"><b>'+'>>'+data.name +':</b>'+data.message+'<br/>'+ '</span>';
 });
 
 socket.on('typing',function(data){

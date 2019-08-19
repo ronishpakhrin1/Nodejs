@@ -100,6 +100,7 @@ socket.on('print',function(data){
     for(var userName in data){
         var isuserNameOnline = data[userName].online;
         if(isuserNameOnline){
+            
             var status='<span class="online"><b>ONLINE</b></span>';
         }
         else{

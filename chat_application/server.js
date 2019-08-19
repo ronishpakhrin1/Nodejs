@@ -6,7 +6,7 @@ var http = require('http'),
     server = http.createServer(app),
     io = socket(server),
     mysql = require('mysql');
-    clients = 0,list = [],list1 = {},msgList=[];
+    list = {},listSize=0;
 
     //database
     var con = mysql.createConnection({
@@ -25,11 +25,12 @@ var http = require('http'),
     });
      
 app.use(express.static('public'));
+
 //connection
 io.on('connection', function (socket) {
-    clients++;
     console.log('connection made by ' + socket.id);
-    io.emit('number', { description: clients + '  online.' });
+   
+ 
     //get messages from the database
     con.query('select * from messages',function(err,result){
         if(err){
@@ -44,6 +45,7 @@ io.on('connection', function (socket) {
     
     //online
     socket.on('username',function(data){
+
         //insert into userRon table
         var record={name: data};
         con.query('insert into userRon set?',record,function(err,res){
@@ -53,13 +55,11 @@ io.on('connection', function (socket) {
                 console.log('data inserted',res.insertId);
             }
         });
-        list.push({
-            id: socket.id,
-            name: data
-        });
             socket.username=data;
-            list1[socket.username]={online: true};
-            io.emit('print', list1);
+            list[socket.username]={online: true,id: socket.id,name:data};
+            listSize = Object.keys(list).length;
+            io.emit('number', { description: listSize + '  online.' });
+            io.emit('print', list);
             io.emit('feed',data);
     });
 
@@ -83,18 +83,15 @@ io.on('connection', function (socket) {
             var uname = msg.substr(1, ind).trim();
             var msg = msg.substr(ind, msg.length).trim();
             var id, sender, id2;
-            for (let i = 0; i < list.length; i++) {
+            for (var i in list) {
                 if (list[i].name === uname) {
                     id = list[i].id;
-                    break;
                 }
-            }
-            for (let i = 0; i < list.length; i++) {
                 if (list[i].name === data.handle) {
                     id2 = list[i].id;
-                    sender = list[i].name;
-                    break;
+                    sender = list[i].name ;
                 }
+                
             }
             io.to(id2).emit('pchat', { message: msg, name: sender });
             io.to(id).emit('pchat', { message: msg, name: sender });
@@ -132,13 +129,14 @@ io.on('connection', function (socket) {
     //when disconnected
     socket.on('disconnect', function () {
         var left=socket.username;
-        clients--;
-        io.emit('number', { description: clients + '  online.' });
+        console.log(left);
+        listSize--;
+        io.emit('number', { description: listSize + '  online.' });
         if(!socket.username){
             return;
         }
-        list1[socket.username].online=false;
-        io.emit('print', list1);
+       list[socket.username].online=false;
+        io.emit('print', list);
         io.emit('feed1',left);
     });
 });

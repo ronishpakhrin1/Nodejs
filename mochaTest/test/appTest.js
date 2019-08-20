@@ -45,7 +45,7 @@ describe('app',function(){
 
             });
             promise1.then(function(value){
-                assert.equal(value,850);
+                assert.equal(value,200);
             }).catch(function(error){
                 throw new Error(error);
             });

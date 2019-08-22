@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const app = require('./app');
+const app = require('../app');
 const http = require('http');
 
 checkStringResult=app.checkString();

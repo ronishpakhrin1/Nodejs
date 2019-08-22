@@ -1,5 +1,5 @@
 const assert = require('assert'); 
-const Pokemon = require('../app');
+const Pokemon = require('../app').Pokemon;
 describe('Creating Test Models',function(){
     it('Inserts a name',function(done){
         const poke = new Pokemon({name: 'Ronish'});

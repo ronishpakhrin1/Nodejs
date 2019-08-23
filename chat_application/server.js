@@ -10,7 +10,7 @@ var http = require('http'),
 
     //database
     var con = mysql.createConnection({
-        host:'ec2-13-59-164-37.us-east-2.compute.amazonaws.com',
+        host:'localhost',
         user:'root',
         password:'password',
         database:'ron'

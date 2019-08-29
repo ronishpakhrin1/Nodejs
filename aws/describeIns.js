@@ -27,7 +27,7 @@ ec2.describeInstances(params, function(err, data) {
             app.get('/',function(req,res){
      //     res.send(instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+instance.State.N$
             res.writeHead(200,{'Content-Type':'text/html'});
-            res.write('<html>');
+          /*  res.write('<html>');
               res.write('<head></head>');
               res.write('<body>');
                 res.write('<table width="100%" border=1>');
@@ -61,11 +61,13 @@ ec2.describeInstances(params, function(err, data) {
                   res.write('</tr>');
                 res.write('</table>');
               res.write('</body>');
-            res.write('</html>');
-            res.end();
+            res.write('</html>');*/
+            res.end('<html><body><table width="100%" border=1><tr><th>Instances</th><th>Status</th><th>Start/Stop</th></tr><tr><td>instance.InstanceId</td><td>instance.State.Name</td><td> <button>start</button> <button>stop</button></td></tr></table></body></html>');
           });
          // console.log('\t'+name+'\t'+instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+$
       }
     }
   }
 });
+server.listen('3030');
+console.log('listening on port 3030');

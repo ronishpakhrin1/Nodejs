@@ -48,7 +48,7 @@ ec2.describeInstances(params, function(err, data) {
                     res.send(instance.InstanceId);
                     res.write('</td>');
                     res.write('<td>');
-                    res.write(instance.State.Name);
+                    res.send(instance.State.Name);
                     res.write('</td>');
                     res.write('<td>');
                     res.write('<button>');
@@ -62,6 +62,7 @@ ec2.describeInstances(params, function(err, data) {
                 res.write('</table>');
               res.write('</body>');
             res.write('</html>');
+            res.end();
           });
          // console.log('\t'+name+'\t'+instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+$
       }

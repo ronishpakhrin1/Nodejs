@@ -50,10 +50,10 @@ ec2.describeInstances(params, function(err, data) {
                     res.send(instance.State.Name);
                     res.write('</td>');
                     res.write('<td>');
-                    res.write('<button onClick="startIns()">');
+                    res.write('<button onclick="startIns()">');
                     res.write('start');
                     res.write('</button>');
-                    res.write('<button onClick="stopIns()">');
+                    res.write('<button onclick="stopIns()">');
                     res.write('stop');
                     res.write('</button>');
                     res.write('</td>');

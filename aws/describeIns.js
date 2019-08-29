@@ -9,7 +9,6 @@ var ec2 = new AWS.EC2({apiVersion: '2016-11-15'});
 var params = {
   DryRun: false
 };
-
 ec2.describeInstances(params, function(err, data) {
   if (err) {
     console.log("Error", err.stack);
@@ -25,11 +24,47 @@ ec2.describeInstances(params, function(err, data) {
                     name = instance.Tags[t].Value;
                 }
             }
-          app.get('/',function(req,res){
-                res.send(instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+instance.State.N$
+            app.get('/',function(req,res){
+     //     res.send(instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+instance.State.N$
+            res.writeHead(200,{'Content-Type':'text/html'});
+            res.write('<html>');
+              res.write('<head></head>');
+              res.write('<body>');
+                res.write('<table width="100%" border=1>');
+                  res.write('<tr>');
+                    res.write('<th>');
+                    res.write('Instances');
+                    res.write('</th>');
+                    res.write('<th>');
+                    res.write('Status');
+                    res.write('</th>');
+                    res.write('<th>');
+                    res.write('Start/Stop');
+                    res.write('</th>');
+                  res.write('</tr>');
+
+                  res.write('<tr>');
+                    res.write('<td>');
+                    res.send(instance.InstanceId);
+                    res.write('</td>');
+                    res.write('<td>');
+                    res.write(instance.State.Name);
+                    res.write('</td>');
+                    res.write('<td>');
+                    res.write('<button>');
+                    res.write('start');
+                    res.write('</button>');
+                    res.write('<button>');
+                    res.write('stop');
+                    res.write('</button>');
+                    res.write('</td>');
+                  res.write('</tr>');
+                res.write('</table>');
+              res.write('</body>');
+            res.write('</html>');
           });
-           // console.log('\t'+name+'\t'+instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+$
-        }
+         // console.log('\t'+name+'\t'+instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+$
+      }
     }
   }
 });

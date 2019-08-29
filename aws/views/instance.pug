@@ -1,0 +1,24 @@
+</!DOCTYPE html>
+<html>
+<head>
+	<title>LIST EC2 INSTANCE</title>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.519.0.min.js"></script>
+</head>
+<body>
+		<table width="100%" border="1">
+			<tr>
+				<th>Instance</th>
+				<th>Status</th>
+				<th>Start/Stop</th>
+			</tr>
+			<tr>
+				<td>#{instanceId}</td>
+				<td>#{status}</td>
+				<td>
+					<button>START</button>
+					<button>STOP</button>
+				</td>
+			</tr>
+		</table>
+</body>
+</html>

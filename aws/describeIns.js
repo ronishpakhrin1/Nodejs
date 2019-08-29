@@ -50,10 +50,10 @@ ec2.describeInstances(params, function(err, data) {
                     res.send(instance.State.Name);
                     res.write('</td>');
                     res.write('<td>');
-                    res.write('<button>');
+                    res.write('<button onClick="startIns()">');
                     res.write('start');
                     res.write('</button>');
-                    res.write('<button>');
+                    res.write('<button onClick="stopIns()">');
                     res.write('stop');
                     res.write('</button>');
                     res.write('</td>');
@@ -63,6 +63,47 @@ ec2.describeInstances(params, function(err, data) {
             res.write('</html>');
             res.end();
           });
+            function startIns(){
+              let params = {
+                 InstanceIds: instance.InstanceId,
+                 DryRun: true
+              };
+
+              ec2.startInstances(params, function(err, data) {
+              if (err && err.code === 'DryRunOperation') {
+                  params.DryRun = false;
+                    ec2.startInstances(params, function(err, data) {
+                    if (err) {
+                      console.log("Error", err);
+                    } else if (data) {
+                      console.log("Success", data.StartingInstances);
+                    }
+                  });
+              } else {
+                    console.log("You don't have permission to start instances.");
+                }
+            });
+          }
+            function stopIns(){
+              let params = {
+                 InstanceIds: instance.InstanceId,
+                 DryRun: true
+              };
+              ec2.stopInstances(params, function(err, data) {
+              if (err && err.code === 'DryRunOperation') {
+                 params.DryRun = false;
+                 ec2.stopInstances(params, function(err, data) {
+                    if (err) {
+                      console.log("Error", err);
+                    } else if (data) {
+                      console.log("Success", data.StoppingInstances);
+                  }
+                });
+              } else {
+                console.log("You don't have permission to stop instances");
+              }
+           });
+         }
          // console.log('\t'+name+'\t'+instance.InstanceId+'\t'+instance.PublicIpAddress+'\t'+instance.InstanceType+'\t'+instance.ImageId+'\t'+$
       }
     }

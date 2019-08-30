@@ -3,6 +3,7 @@
 <head>
 	<title>LIST EC2 INSTANCE</title>
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.519.0.min.js"></script>
+	<script type="text/javascript" src="link.js"></script>
 </head>
 <body>
 		<table width="100%" border="1">
@@ -15,8 +16,8 @@
 				<td>#{instanceId}</td>
 				<td>#{status}</td>
 				<td>
-					<button>START</button>
-					<button>STOP</button>
+					<button onclick="startIns()">START</button>
+					<button onclick="stopIns()">STOP</button>
 				</td>
 			</tr>
 		</table>

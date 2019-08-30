@@ -7,8 +7,8 @@ var http = require('http'),
     app.set('views',path.join(__dirname,'views'));
     app.set('view engine','pug');
                     aws.config.update({
-                        accessKeyId: 'AKIAV5I5KX55VKFLCLNE', 
-                        secretAccessKey: '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', 
+                        accessKeyId: 'some_access_key', 
+                        secretAccessKey: 'some_secret_key', 
                         region: 'ap-south-1'
                     });
                     var ec2 = new aws.EC2();

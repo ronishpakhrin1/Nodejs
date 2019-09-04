@@ -1,21 +1,22 @@
-var AWS = require('aws-sdk');
-AWS.config.update({region: 'ap-south-1',
-                     accessKey: 'SOME_KEY',
-                        secretAccessKey:'SOME_KEY'
-        });
 
-var ec2 = new AWS.EC2();
-
-var params = {
-  DryRun: false
-};
-ec2.describeSecurityGroups(params, function(err, data) {
-   if (err) {
-      console.log("Error", err);
-   } else {
-        for(var i=0,iLength=data.SecurityGroups.length;i<iLength;i++){
-                var securitygroup = data.SecurityGroups[i];
-                console.log(securitygroup.GroupName);
-        }
-   }
+var aws = require('aws-sdk');
+aws.config.update({
+        accessKey:'SOME_KEY',
+        secretAccessKey:'SOME_KEY',
+        region:'ap-south-1'
 });
+var ec2 = new aws.EC2();
+var params = {
+        InstanceIds:['i-0c824cd7f05e11a5a'],
+        DryRun: false
+};
+
+ec2.monitorInstances(params,function(err,data){
+        if(err){
+                console.log('Error',err);
+        }
+        else{
+                console.log(data.InstanceMonitorings);
+        }
+});
+

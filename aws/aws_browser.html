@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>List Instances</title>
+	<style type="text/css">
+		#h1{color: grey;}
+		#result{color: blue;}
+		#result1{color: blue;}
+		#div{border: 1px solid #ddd;padding: 10px;background: #f9f9f9;}
+	</style>
+</head>
+<body>
+	<div id="div">
+	<h1 id="h1"><u>Stop/Start Instances</u></h1>
+		<table width="100%" border="5">
+			<tr>
+				<th>Instance</th>
+				<th>Status</th>
+				<th>Security Group</th>
+				<th>Enter InstanceId</th>
+				<th>Start/Stop</th>
+			</tr>
+			<tr style="text-align: center;">
+				<td><p id="ins"></p></td>
+				<td><p id="status"></p></td>
+				<td><p id="sg"></p></td>
+				<td><input type="text" id="inst"></td>
+				<td>
+					<button onclick="startIns()">START</button>
+					<button onclick="stopIns()">STOP</button>
+				</td>
+			</tr>
+		</table>
+		<strong><i><p id="result">Response:</p></i></strong>
+	</div>
+
+	<div id="div">
+	<h1 id="h1"><u>Stop/Start Ports</u></h1>
+		<table width="100%" border="5">
+			<tr>
+				<th>Group Name</th>
+				<th>Port</th>
+				<th>Protocol</th>
+				<th>IPrange</th>
+				<th>Authorize/Revoke</th>
+			</tr>
+			<tr style="text-align: center;">
+				<td><input type="text" id="groupname" value="Eg Default"></td>
+				<td><input type="number" id="portno" value="Eg 80"></td>
+				<td><input type="text" id="protocol" value="Eg tcp"></td>
+				<td><input type="text" id="iprange" value="Eg 0.0.0.0/0"></td>
+				<td>
+					<button onclick="authorizePort()">AUTHORIZE</button>
+					<button onclick="revokePort()">REVOKE</button>
+				</td>
+			</tr>
+		</table>
+		<strong><i><p id="result1">Response:</p></i></strong>
+		<strong><i><p id="result2">Details:</p></i></strong>
+	</div>
+
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.523.0.min.js"></script>
+	<script type="text/javascript">
+		 AWS.config.update({
+                        accessKeyId: 'AKIAV5I5KX55XFSGUYHS', 
+                        secretAccessKey: '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', 
+                        region: 'ap-south-1'
+                    });
+		    var inst;
+            var ec2 = new AWS.EC2();
+                    var params = {
+                        DryRun: false
+                    };
+                    ec2.describeInstances(params,function(err,data){
+                        if(err){
+                            document.getElementById('result').innerHTML="Filed to Fetch the Instances."
+                        }
+                        else{
+                        	for(var i=0,iLength=data.Reservations.length;i<iLength;i++){
+                            	var reservation = data.Reservations[i];
+                            	for(var j=0,jLength=reservation.Instances.length;j<jLength;++j){
+                                	var instance = reservation.Instances[j];           
+                            		document.getElementById('ins').innerHTML=instance.InstanceId;
+                            		document.getElementById('status').innerHTML=instance.State.Name;
+                            		document.getElementById('sg').innerHTML=instance.SecurityGroups[j].GroupName;
+                            	}
+                        	}
+                        }
+                    });
+
+            var cloudwatch = new AWS.CloudWatch();
+					cloudwatch.getMetricWidgetImage(params, function (err, data) {
+  						if (err){
+  							document.getElementById('result2').innerHTML="Filed to Fetch the Metrics."
+  						}
+  						else{
+  							document.getElementById('result2').innerHTML=data;
+  						}
+            });
+
+
+        function stopIns() {
+        	inst = document.getElementById('inst').value;
+        		var params = {
+ 				 InstanceIds: [
+    				 	inst
+						 ]
+ 				};
+ 				ec2.stopInstances(params, function(err, data) {
+   					if (err){
+   	 					document.getElementById('result').innerHTML="Response: Instance could not be stopped.";
+  					}
+   					else{
+   						document.getElementById('result').innerHTML="Response: Instance Successfully stopped.";
+   					}
+   				});
+        }
+
+        function startIns() {
+        	inst = document.getElementById('inst').value;
+        		var params = {
+ 				 InstanceIds: [
+    				 	inst
+						 ]
+ 				};
+ 				ec2.startInstances(params, function(err, data) {
+   					if (err){
+   	 					document.getElementById('result').innerHTML="Response: Instance could not be started.";
+  					}
+   					else{
+   						document.getElementById('result').innerHTML="Response: Instance Successfully started.";
+   					}
+   				});
+        }
+
+        function authorizePort() {
+        	    var port = document.getElementById('portno').value;
+        	    var protocol = document.getElementById('protocol').value;
+        	    var ip = document.getElementById('iprange').value;
+        		var params = {
+  						GroupName: "", 
+ 						IpPermissions: [
+    					{
+   							FromPort: port , 
+   							IpProtocol: protocol , 
+   							IpRanges: [
+      						{
+     							CidrIp: ip, 
+  						    }
+  						], 
+   							ToPort: port
+ 						}
+ 						]
+ 					};
+ 					params.GroupName = document.getElementById('groupname').value;
+			    ec2.authorizeSecurityGroupIngress(params, function(err, data) {
+   					if (err){
+   						document.getElementById('result1').innerHTML="Response: Port could not be Authorized."
+   					}
+   					else{
+   	   					document.getElementById('result1').innerHTML="Response: Port Successfully Authorized."
+					}
+ 				});
+        }
+
+        function revokePort() {
+        		var port = document.getElementById('portno').value;
+        		var protocol = document.getElementById('protocol').value;
+        	    var ip = document.getElementById('iprange').value;
+        		var params = {
+  						GroupName: "", 
+ 						IpPermissions: [
+    					{
+   							FromPort: port , 
+   							IpProtocol: protocol, 
+   							IpRanges: [
+      						{
+     							CidrIp: ip, 
+  						    }
+  						], 
+   							ToPort: port
+ 						}
+ 						]
+ 					};
+ 					params.GroupName = document.getElementById('groupname').value;
+			    ec2.revokeSecurityGroupIngress(params, function(err, data) {
+   					if (err){
+   						document.getElementById('result1').innerHTML="Response: Port could not be Revoked."
+   					}
+   					else{
+   	   					document.getElementById('result1').innerHTML="Response: Port Successfully Revoked."
+					}
+ 				});
+
+        }
+
+	</script>
+</body>
+</html>

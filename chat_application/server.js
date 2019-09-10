@@ -73,7 +73,7 @@ io.on('connection', function (socket) {
                     if(err){
                         console.log(err);
                     }else{
-                        console.log('data onserted',res.insertId);
+                        console.log('data inserted',res.insertId);
                     }
                 });
         }

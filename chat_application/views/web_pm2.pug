@@ -1,0 +1,19 @@
+html
+head
+meta(http-equiv='refresh', content='3')
+title PM2
+body
+h1 Process: #{name}
+table(width='50%' border='1')
+	tr
+		th Process Id
+		th CPU utilization(%)
+		th MEMORY usage(KB)
+		th Status
+		th Instance
+	tr
+		td #{processid}
+		td #{cpu}
+		td #{memory}
+		td #{status}
+		td #{instances}

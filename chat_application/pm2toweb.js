@@ -8,25 +8,29 @@ var pm2 = require('pm2');
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','pug');
 
-var pid,cpu,memory,status,name,instances;
+var pid,cpu,memory,status,name,instances,logs;
 pm2.connect(function(err){
     if(err){
         console.log(err);
             process.exit(2);
     }
-/*    pm2.delete('server',function(err,proc){
+  /*  pm2.delete('server',function(err,proc){
             if(err){
                     throw err;
             }
     });*/
-   /* pm2.start({name:'server',
-                script:'server.js'
-            
-            },function(err,apps){
+   pm2.start('/home/rahaman/Nodejs/chat_application/ecosystem.config.js',function(err,apps){
+                        pm2.disconnect();
                         if(err){
                             throw err;
                         }
-    });*/
+                        pm2.launchBus(function(err,bus){
+                            bus.on('log:out',function(packet){
+                                logs = packet.data;
+                                
+                            });
+                        });
+    });
     setInterval(function(){
         pm2.describe('server',function(err,list){
             if(err){
@@ -39,7 +43,6 @@ pm2.connect(function(err){
                      name = list[i].name;
                      status = list[i].pm2_env.status;
                      instances = list[i].pm2_env.instances;
-
                      app.get('/',function(req,res){
                         res.render('web_pm2',{
                             processid: pid,
@@ -47,13 +50,15 @@ pm2.connect(function(err){
                             memory: memory,
                             name: name,
                             status: status,
-                            instances: instances
+                            instances: instances,
+                            logs: logs
                         });
                     }); 
                     
                 }
             }
         });
+       
     },1000);
 });
 server.listen('6060');

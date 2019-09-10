@@ -129,7 +129,7 @@ io.on('connection', function (socket) {
     //when disconnected
     socket.on('disconnect', function () {
         var left=socket.username;
-        console.log(left);
+        console.log('Disconnected by: ',left);
         listSize--;
         io.emit('number', { description: listSize + '  online.' });
         if(!socket.username){

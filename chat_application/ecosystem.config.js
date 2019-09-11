@@ -12,6 +12,7 @@ module.exports = {
     ignore_watch:'node_modules',
     max_memory_restart: '1G',
     out_file:'/home/rahaman/.pm2/logs/server-out.log',
+    output:'/home/rahaman/.pm2/logs/server-out.log',
     env: {
       NODE_ENV: 'development'
     },
